@@ -1656,7 +1656,7 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 [[package]]
 name = "peniko"
 version = "0.2.0"
-source = "git+https://github.com/linebender/peniko.git?rev=d114c62#d114c6292dbcfb03e7360692198be423168a0edd"
+source = "git+https://github.com/mTvare6/peniko.git?branch=luminance-clip#cd9aa45fe5a5c3070f18311cf33aad9cc83e5863"
 dependencies = [
  "color",
  "kurbo",
