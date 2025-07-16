@@ -219,7 +219,8 @@ fn blend_compose(
     cs: vec3<f32>,
     ab: f32,
     as_: f32,
-    mode: u32
+    compose_mode: u32,
+    mix_mode: u32
 ) -> vec4<f32> {
     var fa = 0.0;
     var fb = 0.0;
@@ -241,13 +242,11 @@ fn blend_compose(
             fb = 1.0;
         }
         case COMPOSE_SRC_IN: {
-            if (get_mix(mode) == MIX_LUMINANCE_CLIP) {
-                fa = dot(cs, vec3<f32>(0.3, 0.59, 0.11));
-                fb = 0.0;
-            } else {
-                fa = ab;
-                fb = 0.0;
+            fa = ab;
+            if mix_mode == MIX_LUMINANCE_CLIP {
+                fa *= lum(cb);
             }
+            fb = 0.0;
         }
         case COMPOSE_DEST_IN: {
             fa = 0.0;
@@ -289,11 +288,6 @@ fn blend_compose(
     return vec4(co, min(as_fa + ab_fb, 1.0));
 }
 
-// Helper function to extract Mix value from mode
-fn get_mix(mode: u32) -> u32 {
-    return (mode >> 8u) & 0xffu;
-}
-
 // Apply color mixing and composition. Both input and output colors are
 // premultiplied RGB.
 fn blend_mix_compose(backdrop: vec4<f32>, src: vec4<f32>, mode: u32) -> vec4<f32> {
@@ -316,6 +310,6 @@ fn blend_mix_compose(backdrop: vec4<f32>, src: vec4<f32>, mode: u32) -> vec4<f32
         let co = mix(backdrop.rgb, cs, src.a);
         return vec4(co, src.a + backdrop.a * (1.0 - src.a));
     } else {
-        return blend_compose(cb, cs, backdrop.a, src.a, compose_mode);
+        return blend_compose(cb, cs, backdrop.a, src.a, compose_mode, mix_mode);
     }
 }
