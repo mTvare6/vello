@@ -224,7 +224,7 @@ fn blend_compose(
 ) -> vec4<f32> {
     var fa = 0.0;
     var fb = 0.0;
-    switch mode {
+    switch compose_mode {
         case COMPOSE_COPY: {
             fa = 1.0;
             fb = 0.0;
